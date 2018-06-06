@@ -11,11 +11,19 @@ const UserMenu = ({user, logout}) => {
 
   return (
     <Nav pullRight>
-
       <NavDropdown id='user-menu' title={navTitle}>
         <LinkContainer to="/profile">
           <MenuItem>Edit profile</MenuItem>
         </LinkContainer>
+        <LinkContainer to="/publish">
+          <MenuItem>Publish menu</MenuItem>
+        </LinkContainer>
+        {
+          user.role === 'admin' ?
+            <LinkContainer to="/artists/unpublish">
+              <MenuItem>Unpublished artists</MenuItem>
+            </LinkContainer> : null
+        }
         <MenuItem divider/>
         <MenuItem onClick={logout}>Logout</MenuItem>
       </NavDropdown>
