@@ -22,7 +22,7 @@ db.once('open', () => {
 
   // app.use('/products', products());
   // app.use('/categories', categories());
-  app.use('/users', users());
+  // app.use('/users', users());
 
   app.listen(port, () => {
     console.log(`Server started on ${port} port!`);
