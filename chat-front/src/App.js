@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import './App.css';
 import Layout from "./containers/Layout/Layout";
 import {Route, Switch} from "react-router-dom";
@@ -12,11 +12,9 @@ class App extends Component {
     return (
       <Layout>
         <Switch>
-
+          <Route path="/" exact component={Chat}/>
           <Route path="/register" exact component={Register}/>
           <Route path="/login" exact component={Login}/>
-          <Chat/>
-
         </Switch>
 
       </Layout>

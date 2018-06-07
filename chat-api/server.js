@@ -2,9 +2,11 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const app = express();
+const expressWs = require('express-ws')(app);
 
 const config = require('./config');
 const users = require('./app/users');
+const chat = require('./app/chat');
 
 const port = 8000;
 
@@ -22,7 +24,8 @@ db.once('open', () => {
 
   // app.use('/products', products());
   // app.use('/categories', categories());
-  // app.use('/users', users());
+  app.use('/chat', chat());
+  app.use('/users', users());
 
   app.listen(port, () => {
     console.log(`Server started on ${port} port!`);

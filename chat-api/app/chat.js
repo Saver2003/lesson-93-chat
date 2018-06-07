@@ -1,5 +1,6 @@
 const express = require('express');
-
+const Message = require('../models/Message');
+const User = require('../models/User');
 
 const clients = {};
 
@@ -10,6 +11,15 @@ const createRouter = () => {
   router.ws('/', (ws, req) => {
     const id = req.get('sec-websocket-key');
     clients[id] = ws;
+
+    Message.find().then(messages => {
+      ws.send(JSON.stringify({
+          type: 'ALL_MESSAGES',
+          messages: messages.slice(-30)
+      }))
+    });
+
+
 
     console.log('client connected');
     console.log('Number of active connections', Object.values(clients).length);
@@ -31,15 +41,27 @@ const createRouter = () => {
 
       switch (decodedMessage.type) {
         case 'SET_USERNAME':
-          username = req.query.token;
+          username = decodedMessage.username;
           break;
         case 'CREATE_MESSAGE':
-          Object.values(clients).forEach(client => {
-            client.send(JSON.stringify({
-              type: 'NEW_MESSAGE',
+          const token = req.query.token;
+
+          User.findOne({token}).then(result => {
+            const messageData = {
               text: decodedMessage.text,
-              username: username
-            }));
+              user: result.username
+            };
+
+            const message = new Message(messageData);
+
+            message.save().then(message => {
+              Object.values(clients).forEach(client => {
+                client.send(JSON.stringify({
+                  type: 'NEW_MESSAGE',
+                  message: message
+                }));
+              });
+            });
           });
           break;
         default:

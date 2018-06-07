@@ -12,11 +12,7 @@ app.use(cors());
 app.use('/chat', chat());
 app.use('/users', users());
 
-
-
-
-app.ws('/user');
-
+// app.ws('/user');
 
 app.listen(port, () => {
   console.log(`Server started on ${port} port!`);
