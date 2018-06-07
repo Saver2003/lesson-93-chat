@@ -1,6 +1,5 @@
 import React, {Component, Fragment} from 'react';
-import {fetchMessages, loadMessages, saveMessage} from "../../store/actions/chat";
-import {saveState} from "../../store/localStorage";
+import {loadMessages, saveMessage} from "../../store/actions/chat";
 import {connect} from "react-redux";
 
 class Chat extends Component {
@@ -14,24 +13,36 @@ class Chat extends Component {
     this.setState({messageText: event.target.value})
   };
 
+
+
   componentDidMount() {
-    this.websocket = new WebSocket('ws://localhost:8000/chat?token=' + this.props.user.token);
-    this.props.onLoadMessages(this.props.match.params.id);
     if (!this.props.user) {
       this.props.history.push('/login');
-    }
-    this.websocket.onmessage = (message) => {
-      const decodedMessage = JSON.parse(message.data);
-      switch (decodedMessage.type) {
-        case 'ALL_MESSAGES':
-          console.log(decodedMessage);
-          break;
-        case 'NEW_MESSAGE':
-          console.log(decodedMessage);
-          this.props.onSaveMessage(decodedMessage.message);
+    } else {
+      this.websocket = new WebSocket('ws://localhost:8000/chat?token=' + this.props.user.token);
+
+      this.websocket.onmessage = (message) => {
+        const decodedMessage = JSON.parse(message.data);
+        switch (decodedMessage.type) {
+          case 'ALL_MESSAGES':
+            this.props.onLoadMessages(decodedMessage.messages);
+            break;
+          case 'NEW_MESSAGE':
+            this.props.onSaveMessage(decodedMessage.message);
+            break;
+          default:
+            return this.state;
+        }
       }
     }
   };
+
+  componentDidUpdate() {
+    if (!this.props.user) {
+      this.websocket.send(JSON.stringify({type: 'CLOSE_CONNECTION'}));
+      this.props.history.push('/login');
+    }
+  }
 
   sendMessage = event => {
     event.preventDefault();
@@ -46,27 +57,27 @@ class Chat extends Component {
     return (
       <Fragment>
 
-          <div>
-            <form>
-              <input
-                type="text"
-                required
-                placeholder="Enter message"
-                value={this.state.messageText}
-                onChange={this.messageTextChangeHandler}
-              />
-              <button
-                onClick={this.sendMessage}
-              >
-                Send
-              </button>
-              {this.props.messages.map(message => (
+        <div>
+          <form>
+            <input
+              type="text"
+              required
+              placeholder="Enter message"
+              value={this.state.messageText}
+              onChange={this.messageTextChangeHandler}
+            />
+            <button
+              onClick={this.sendMessage}
+            >
+              Send
+            </button>
+            {this.props.messages.map(message => (
 
-                  <p key={message._id}>{message.user + ': ' + message.text}</p>
+              <p key={message._id}>{message.user + ': ' + message.text}</p>
 
-              ))}
-            </form>
-          </div>
+            ))}
+          </form>
+        </div>
 
       </Fragment>
     );
@@ -82,7 +93,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onLoadMessages: (id) => dispatch(fetchMessages(id)),
+    onLoadMessages: (id) => dispatch(loadMessages(id)),
     onSaveMessage: (message, token) => dispatch(saveMessage(message, token))
   }
 };

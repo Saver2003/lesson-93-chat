@@ -1,8 +1,6 @@
-// import axios from '../../axios-api';
 import {FETCH_MESSAGES, SAVE_NEW_MESSAGE} from "./actionTypes";
 
-
-export const fetchMessages = messages => {
+export const loadMessages = messages => {
   return {type: FETCH_MESSAGES, messages};
 };
 

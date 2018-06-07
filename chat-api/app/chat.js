@@ -40,11 +40,15 @@ const createRouter = () => {
       }
 
       switch (decodedMessage.type) {
+        case 'CLOSE_CONNECTION':
+          ws.close();
+          break;
         case 'SET_USERNAME':
           username = decodedMessage.username;
           break;
         case 'CREATE_MESSAGE':
           const token = req.query.token;
+          console.log('new message')
 
           User.findOne({token}).then(result => {
             const messageData = {
