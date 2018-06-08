@@ -10,6 +10,10 @@ const MessageSchema = new Schema({
   user: {
     type: String,
     required: true
+  },
+  datetime: {
+    type: Date,
+    default: Date.now
   }
 
 });

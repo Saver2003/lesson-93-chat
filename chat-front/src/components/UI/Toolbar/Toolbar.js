@@ -8,7 +8,7 @@ const Toolbar = ({user, logout}) => (
   <Navbar>
     <Navbar.Header>
       <Navbar.Brand>
-        <LinkContainer to="/" exact><a>Chat</a></LinkContainer>
+        <LinkContainer to="/" exact><a>Welcome to chat!</a></LinkContainer>
       </Navbar.Brand>
       <Navbar.Toggle/>
     </Navbar.Header>

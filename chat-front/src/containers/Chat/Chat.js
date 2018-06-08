@@ -14,7 +14,6 @@ class Chat extends Component {
   };
 
 
-
   componentDidMount() {
     if (!this.props.user) {
       this.props.history.push('/login');
@@ -54,28 +53,45 @@ class Chat extends Component {
   };
 
   render() {
+
     return (
       <Fragment>
+        <div style={{width: '20%', display: 'block', marginRight: '0', float: 'left'}}>
+          <h3>Users</h3>
+          {this.state.messages.map(message => {
+            return (
+              <p key={message.user._id}><b>{message.user}</b></p>
+            )
+          })}
+        </div>
+        <div style={{float: 'right', width: '70%'}}>
+          <h3>Messages</h3>
 
-        <div>
+        <div style={{border: '1px solid grey', overflow: 'scroll', height: '400px'}}>
           <form>
-            <input
-              type="text"
-              required
-              placeholder="Enter message"
-              value={this.state.messageText}
-              onChange={this.messageTextChangeHandler}
+
+            {this.props.messages.map(message => {
+            console.log(message.user);
+              return (
+                <p style={{marginLeft: '15px'}} key={message._id}>{message.user + ': ' + message.text}</p>
+              )
+            })}
+          </form>
+        </div>
+          <form>
+            <input style={{margin: '15px 0 0 0'}}
+                   type="text"
+                   required
+                   placeholder="Enter message"
+                   value={this.state.messageText}
+                   onChange={this.messageTextChangeHandler}
             />
             <button
               onClick={this.sendMessage}
             >
               Send
             </button>
-            {this.props.messages.map(message => (
 
-              <p key={message._id}>{message.user + ': ' + message.text}</p>
-
-            ))}
           </form>
         </div>
 

@@ -19,8 +19,6 @@ const createRouter = () => {
       }))
     });
 
-
-
     console.log('client connected');
     console.log('Number of active connections', Object.values(clients).length);
 
@@ -48,7 +46,7 @@ const createRouter = () => {
           break;
         case 'CREATE_MESSAGE':
           const token = req.query.token;
-          console.log('new message')
+          console.log('new message');
 
           User.findOne({token}).then(result => {
             const messageData = {
