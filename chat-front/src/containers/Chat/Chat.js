@@ -56,7 +56,7 @@ class Chat extends Component {
 
     return (
       <Fragment>
-        <div style={{width: '20%', display: 'block', marginRight: '0', float: 'left'}}>
+        <div style={{width: '20%', display: 'block', marginRight: '0', float: 'right'}}>
           <h3>Users</h3>
           {this.state.messages.map(message => {
             return (
@@ -64,7 +64,7 @@ class Chat extends Component {
             )
           })}
         </div>
-        <div style={{float: 'right', width: '70%'}}>
+        <div style={{float: 'left', width: '70%'}}>
           <h3>Messages</h3>
 
         <div style={{border: '1px solid grey', overflow: 'scroll', height: '400px'}}>
