@@ -9,9 +9,11 @@ const Layout = props => (
     <header>
       <Toolbar user={props.user} logout={props.logoutUser}/>
     </header>
+    <div style={{background: '#ddd'}}>
     <main className="container">
       {props.children}
     </main>
+    </div>
   </Fragment>
 );
 

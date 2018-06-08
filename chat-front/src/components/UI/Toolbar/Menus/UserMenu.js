@@ -5,7 +5,7 @@ import {LinkContainer} from "react-router-bootstrap";
 const UserMenu = ({user, logout}) => {
   const navTitle = (
     <Fragment>
-      Hello, <b>{user.username}</b>!
+      <p style={{color: '#000000', display: 'inline'}}>Hello, <b>{user.username}</b>!</p>
     </Fragment>
   );
 

@@ -5,10 +5,10 @@ import UserMenu from "./Menus/UserMenu";
 import AnonymousMenu from "./Menus/AnonymousMenu";
 
 const Toolbar = ({user, logout}) => (
-  <Navbar>
+  <Navbar  style={{marginBottom: '0', background: '#989893'}}>
     <Navbar.Header>
       <Navbar.Brand>
-        <LinkContainer to="/" exact><a>Welcome to chat!</a></LinkContainer>
+        <LinkContainer to="/" exact  style={{color: '#fff772'}}><a>Welcome to chat!</a></LinkContainer>
       </Navbar.Brand>
       <Navbar.Toggle/>
     </Navbar.Header>
