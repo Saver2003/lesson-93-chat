@@ -6,7 +6,6 @@ import Register from "./containers/Register/Register";
 import Login from "./containers/Login/Login";
 import Chat from "./containers/Chat/Chat";
 
-
 class App extends Component {
   render() {
     return (

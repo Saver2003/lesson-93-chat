@@ -8,7 +8,6 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import store, {history} from "./store/configureStore";
 
-
 const app = (
   <Provider store={store}>
     <ConnectedRouter history={history}>

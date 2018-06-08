@@ -9,7 +9,7 @@ const Layout = props => (
     <header>
       <Toolbar user={props.user} logout={props.logoutUser}/>
     </header>
-    <div style={{background: '#ddd'}}>
+    <div style={{background: '#ddd', height: '100%'}}>
     <main className="container">
       {props.children}
     </main>
