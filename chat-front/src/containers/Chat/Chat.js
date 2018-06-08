@@ -67,19 +67,19 @@ class Chat extends Component {
         <div style={{float: 'left', width: '70%'}}>
           <h3>Messages</h3>
 
-        <div style={{border: '1px solid grey', overflow: 'scroll', height: '400px'}}>
+        <div style={{border: '1px solid grey', overflow: 'scroll', height: '400px', background: '#161615'}}>
           <form>
 
             {this.props.messages.map(message => {
             console.log(message.user);
               return (
-                <p style={{marginLeft: '15px'}} key={message._id}>{message.user + ': ' + message.text}</p>
+                <p style={{marginLeft: '15px', color: '#fff772'}} key={message._id}>{message.user + ': ' + message.text}</p>
               )
             })}
           </form>
         </div>
           <form>
-            <input style={{margin: '15px 0 0 0'}}
+            <input style={{margin: '15px 0 0 0', width: '400px'}}
                    type="text"
                    required
                    placeholder="Enter message"
