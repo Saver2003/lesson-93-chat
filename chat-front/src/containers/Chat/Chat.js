@@ -1,7 +1,6 @@
 import React, {Component, Fragment} from 'react';
 import {loadMessages, saveMessage, loadAllUsers, deleteMessage} from "../../store/actions/chat";
 import {connect} from "react-redux";
-import scrollToComponent from 'react-scroll-to-component';
 
 class Chat extends Component {
 
@@ -14,7 +13,6 @@ class Chat extends Component {
   messageTextChangeHandler = event => {
     this.setState({messageText: event.target.value})
   };
-
 
   componentDidMount() {
     if (!this.props.user) {
@@ -42,8 +40,6 @@ class Chat extends Component {
         }
       };
     }
-
-    scrollToComponent(this)
   };
 
   componentDidUpdate() {
@@ -64,7 +60,6 @@ class Chat extends Component {
 
   deleteMessage(event, id) {
     event.preventDefault();
-    console.log('asdas')
     this.websocket.send(JSON.stringify({
       type: 'DELETE_MESSAGE',
       id: id
@@ -72,12 +67,10 @@ class Chat extends Component {
   }
 
   render() {
-
     return (
       <Fragment>
         <div style={{width: '20%', display: 'block', marginRight: '0', float: 'right'}}>
           <h3>Users</h3>
-
           {this.props.oneUser.map(user => {
             return (
               <p key={user.username}><b>{user.username}</b></p>

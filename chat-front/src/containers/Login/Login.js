@@ -63,7 +63,6 @@ class Login extends Component {
   }
 }
 
-
 const mapStateToProps = state => ({
   error: state.users.loginError
 });
@@ -71,6 +70,5 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   loginUser: userData => dispatch(loginUser(userData))
 });
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
