@@ -1,5 +1,6 @@
 export const SAVE_NEW_MESSAGE = 'SAVE_NEW_MESSAGE';
 export const FETCH_MESSAGES = 'FETCH_MESSAGES';
+export const DELETE_MESSAGE = 'DELETE_MESSAGE';
 
 export const LOAD_ALL_USERS = 'LOAD_ALL_USERS';
 

@@ -4,8 +4,6 @@ const User = require('../models/User');
 
 const clients = {};
 
-const users = [];
-
 const createRouter = () => {
 
   let user;
@@ -18,12 +16,14 @@ const createRouter = () => {
 
     user = await User.findOne({token});
 
-    // console.log(user);
+    console.log(user)
 
     const id = req.get('sec-websocket-key');
     clients[id] = ws;
 
     clients[id].connectedUser = user;
+
+    const currentUser = clients[id].connectedUser;
 
     let connectedUsers = Object.keys(clients).map(key => {
       return clients[key].connectedUser;
@@ -37,16 +37,12 @@ const createRouter = () => {
       }));
     });
 
-    // console.log(connectedUsers);
-
     Message.find().then(messages => {
       ws.send(JSON.stringify({
         type: 'ALL_MESSAGES',
         messages: messages.slice(-30)
       }))
     });
-
-
 
     console.log('client connected');
     console.log('Number of active connections', Object.values(clients).length);
@@ -66,6 +62,7 @@ const createRouter = () => {
         }));
       }
 
+
       switch (decodedMessage.type) {
         case 'CLOSE_CONNECTION':
           ws.close();
@@ -76,25 +73,37 @@ const createRouter = () => {
         case 'CREATE_MESSAGE':
           console.log('new message');
 
-            const messageData = {
-              text: decodedMessage.text,
-              user: user.username
-            };
+          const messageData = {
+            text: decodedMessage.text,
+            user: currentUser.username
+          };
 
-            const message = new Message(messageData);
+          const message = new Message(messageData);
 
-            // console.log(message);
-            // console.log(user);
+          await message.save();
 
-            await message.save();
-
-              Object.values(clients).forEach(client => {
-                client.send(JSON.stringify({
-                  type: 'NEW_MESSAGE',
-                  message: message
-                }));
-              });
-
+          Object.values(clients).forEach(client => {
+            client.send(JSON.stringify({
+              type: 'NEW_MESSAGE',
+              message: message
+            }));
+          });
+          break;
+        case 'DELETE_MESSAGE':
+          if (currentUser.role !== 'admin') {
+            return ws.send(JSON.stringify({
+              type: 'ERROR',
+              message: 'Unauthorized',
+            }))
+          } else {
+            const delMessage = await Message.findByIdAndDelete(decodedMessage.id);
+            Object.values(clients).forEach(client => {
+              client.send(JSON.stringify({
+                type: 'DELETE_SUCCESS',
+                message: delMessage._id
+              }));
+            });
+          }
           break;
         default:
           return ws.send(JSON.stringify({
@@ -114,8 +123,7 @@ const createRouter = () => {
       Object.values(clients).forEach(client => {
         client.send(JSON.stringify({
           type: 'UPDATE_USERS',
-          users: connectedUsers,
-          user: clients[id].connectedUser
+          users: connectedUsers
         }));
       });
 

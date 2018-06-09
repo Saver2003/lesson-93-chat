@@ -1,6 +1,7 @@
 import React, {Component, Fragment} from 'react';
-import {loadMessages, saveMessage, loadAllUsers} from "../../store/actions/chat";
+import {loadMessages, saveMessage, loadAllUsers, deleteMessage} from "../../store/actions/chat";
 import {connect} from "react-redux";
+import scrollToComponent from 'react-scroll-to-component';
 
 class Chat extends Component {
 
@@ -23,13 +24,15 @@ class Chat extends Component {
 
       this.websocket.onmessage = (message) => {
         const decodedMessage = JSON.parse(message.data);
-        console.log(decodedMessage);
         switch (decodedMessage.type) {
           case 'ALL_MESSAGES':
             this.props.onLoadMessages(decodedMessage.messages);
             break;
           case 'NEW_MESSAGE':
             this.props.onSaveMessage(decodedMessage.message);
+            break;
+          case 'DELETE_SUCCESS':
+            this.props.deleteMessage(decodedMessage.message);
             break;
           case 'UPDATE_USERS':
             this.props.loadAllUsers(decodedMessage.users);
@@ -39,6 +42,8 @@ class Chat extends Component {
         }
       };
     }
+
+    scrollToComponent(this)
   };
 
   componentDidUpdate() {
@@ -57,6 +62,15 @@ class Chat extends Component {
     this.setState({messageText: ''});
   };
 
+  deleteMessage(event, id) {
+    event.preventDefault();
+    console.log('asdas')
+    this.websocket.send(JSON.stringify({
+      type: 'DELETE_MESSAGE',
+      id: id
+    }))
+  }
+
   render() {
 
     return (
@@ -65,7 +79,6 @@ class Chat extends Component {
           <h3>Users</h3>
 
           {this.props.oneUser.map(user => {
-            console.log(user);
             return (
               <p key={user.username}><b>{user.username}</b></p>
             )
@@ -77,14 +90,22 @@ class Chat extends Component {
             <form>
 
               {this.props.messages.map(message => {
-                console.log(message.user);
                 return (
-                  <p style={{marginLeft: '15px', color: '#fff772'}} key={message._id}>
+                  <div key={message._id}>
+                  <p style={{marginLeft: '15px', color: '#fff772', display: 'inline'}} key={message._id}>
                     <b style={{color: '#70e26b'}}>
                       {message.user}
                     </b>
                     {'' + ': ' + message.text}
                   </p>
+                    {this.props.user.role === 'admin' ?
+                      <button
+                        onClick={(event) => this.deleteMessage(event, message._id)}
+                        style={{marginLeft: '20px', background: '#161615', color: '#b52c05', border: 'none'}}>
+                        Delete message
+                      </button> : null
+                    }
+                  </div>
                 )
               })}
             </form>
@@ -121,7 +142,8 @@ const mapDispatchToProps = dispatch => {
   return {
     onLoadMessages: (id) => dispatch(loadMessages(id)),
     onSaveMessage: (message, token) => dispatch(saveMessage(message, token)),
-    loadAllUsers: (users) => dispatch(loadAllUsers(users))
+    loadAllUsers: (users) => dispatch(loadAllUsers(users)),
+    deleteMessage: (id) => dispatch(deleteMessage(id))
   }
 };
 
